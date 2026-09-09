@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Legend of Zelda - Guía de Semántica e Interactividad HTML5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zelda: {
+                            gold: '#FFD700',
+                            goldLight: '#FFE57F',
+                            greenDark: '#0A231C',
+                            greenMedium: '#144536',
+                            greenBright: '#2E8B57',
+                            parchment: '#F4E8C1',
+                            darkBg: '#09100D',
+                            cardBg: '#111D18'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #09100D;
+            color: #E2E8F0;
+            background-image: radial-gradient(circle at 50% 0%, #144536 0%, #09100D 75%);
+            background-attachment: fixed;
+        }
+
+        /* Estilo personalizado para la barra de progreso */
+        progress::-webkit-progress-bar {
+            background-color: #1A2E26;
+            border-radius: 8px;
+            border: 1px solid #FFD700;
+        }
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, #10B981, #FFD700);
+            border-radius: 8px;
+        }
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, #10B981, #FFD700);
+            border-radius: 8px;
+        }
+
+        /* Animación suave para detalles */
+        details[open] summary ~ * {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Dialog backdrop styling */
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+        }
+
+        mark {
+            background-color: #FFD700;
+            color: #0A231C;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans">
+
+    <header class="border-b border-zelda-gold/30 bg-zelda-greenDark/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i data-lucide="shield" class="text-zelda-gold w-8 h-8"></i>
+                <h1 class="text-2xl font-bold text-zelda-gold tracking-wide">The Legend of Zelda</h1>
+            </div>
+            <nav>
+                <ul class="flex flex-wrap gap-4 text-sm font-medium">
+                    <li><a href="#investigacion" class="hover:text-zelda-gold transition-colors flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> Investigacion HTML5</a></li>
+                    <li><a href="#historia" class="hover:text-zelda-gold transition-colors flex items-center gap-1"><i data-lucide="crown" class="w-4 h-4"></i> Historia y Saga</a></li>
+                    <li><a href="#multimedia" class="hover:text-zelda-gold transition-colors flex items-center gap-1"><i data-lucide="film" class="w-4 h-4"></i> Multimedia</a></li>
+                    <li><a href="#interactivo" class="hover:text-zelda-gold transition-colors flex items-center gap-1"><i data-lucide="sparkles" class="w-4 h-4"></i> Elementos HTML5</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Banner Principal -->
+    <section class="relative py-12 px-4 text-center border-b border-zelda-greenMedium/50 bg-gradient-to-b from-zelda-greenMedium/20 to-transparent">
+        <div class="max-w-4xl mx-auto space-y-4">
+            <span class="inline-block px-3 py-1 bg-zelda-gold/20 text-zelda-gold border border-zelda-gold/40 rounded-full text-xs font-semibold uppercase tracking-wider">
+                Proyecto Web Semántico & Interactive HTML5
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                Homenaje a la Leyenda de <span class="text-zelda-gold">Hyrule</span>
+            </h2>
+            <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+                Una exploración sobre las aventuras de Link, la creación de Shigeru Miyamoto y los conceptos clave de elementos semánticos e interactivos en el desarrollo web moderno.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 space-y-12">
+
+        <section id="investigacion" class="bg-zelda-cardBg border border-zelda-gold/20 rounded-xl p-6 sm:p-8 shadow-xl">
+            <div class="flex items-center gap-3 mb-6">
+                <i data-lucide="code" class="text-zelda-gold w-7 h-7"></i>
+                <h2 class="text-2xl font-bold text-zelda-gold">1. Investigación: ¿Qué son los Elementos Interactivos y Semánticos en HTML5?</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300">
+                <div class="space-y-4 bg-zelda-greenDark/50 p-5 rounded-lg border border-slate-800">
+                    <h3 class="text-xl font-semibold text-emerald-400 flex items-center gap-2">
+                        <i data-lucide="layout" class="w-5 h-5"></i> Elementos Semánticos
+                    </h3>
+                    <p class="text-sm leading-relaxed">
+                        Los elementos semánticos son etiquetas que transmiten claramente el **significado y propósito del contenido** tanto para los desarrolladores como para los navegadores y motores de búsqueda.
+                    </p>
+                    <ul class="list-disc list-inside text-sm space-y-2 text-slate-400">
+                        <li><strong>Etiquetas clave:</strong> <code class="text-zelda-gold">&lt;header&gt;</code>, <code class="text-zelda-gold">&lt;main&gt;</code>, <code class="text-zelda-gold">&lt;article&gt;</code>, <code class="text-zelda-gold">&lt;section&gt;</code>, <code class="text-zelda-gold">&lt;footer&gt;</code>.</li>
+                        <li><strong>Ventajas:</strong> Mejoran la accesibilidad (lectores de pantalla) y el SEO del sitio web.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-4 bg-zelda-greenDark/50 p-5 rounded-lg border border-slate-800">
+                    <h3 class="text-xl font-semibold text-emerald-400 flex items-center gap-2">
+                        <i data-lucide="mouse-pointer-click" class="w-5 h-5"></i> Elementos Interactivos
+                    </h3>
+                    <p class="text-sm leading-relaxed">
+                        Son componentes nativos de HTML5 diseñados para permitir que el usuario interactúe directamente con la interfaz **sin necesidad obligatoria de frameworks o scripts complejos**.
+                    </p>
+                    <ul class="list-disc list-inside text-sm space-y-2 text-slate-400">
+                        <li><strong>Etiquetas clave:</strong> <code class="text-zelda-gold">&lt;details&gt;</code>, <code class="text-zelda-gold">&lt;summary&gt;</code>, <code class="text-zelda-gold">&lt;dialog&gt;</code>, <code class="text-zelda-gold">&lt;progress&gt;</code>.</li>
+                        <li><strong>Ventajas:</strong> Proporcionan comportamiento nativo rápido, ligero y responsivo en cualquier navegador moderno.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="historia" class="bg-zelda-cardBg border border-zelda-gold/20 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+            <div class="flex items-center gap-3">
+                <i data-lucide="sword" class="text-zelda-gold w-7 h-7"></i>
+                <h2 class="text-2xl font-bold text-zelda-gold">2. La Saga: The Legend of Zelda y Shigeru Miyamoto</h2>
+            </div>
+
+            <article class="prose prose-invert max-w-none text-slate-300 space-y-4">
+                <p>
+                    Creada por los visionarios <mark>Shigeru Miyamoto</mark> y Takashi Tezuka en 1986 para Nintendo, <abbr title="The Legend of Zelda">TLOZ</abbr> es una de las sagas más icónicas e influyentes en la historia de los videojuegos. La historia se centra habitualmente en <mark>Link</mark>, un joven héroe elegido para rescatar a la <mark>Princesa Zelda</mark> y proteger el reino de Hyrule del malvado Ganon.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                    <!-- Lista de juegos populares -->
+                    <div class="bg-zelda-greenDark/40 p-5 rounded-lg border border-zelda-greenMedium">
+                        <h3 class="text-lg font-bold text-zelda-gold mb-3 flex items-center gap-2">
+                            <i data-lucide="trophy" class="w-5 h-5"></i> Entrega Aclamadas de la Saga
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-300">
+                            <li><strong class="text-white">The Legend of Zelda (1986)</strong> - El inicio en la consola NES.</li>
+                            <li><strong class="text-white">Ocarina of Time (1998)</strong> - Considerado uno de los mejores juegos de la historia.</li>
+                            <li><strong class="text-white">The Wind Waker (2002)</strong> - Estilo Cel-Shading inolvidable.</li>
+                            <li><strong class="text-white">Breath of the Wild (2017)</strong> - Revolución del mundo abierto.</li>
+                            <li><strong class="text-white">Tears of the Kingdom (2023)</strong> - Innovación en físicas y creatividad.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Datos Curiosos -->
+                    <div class="bg-zelda-greenDark/40 p-5 rounded-lg border border-zelda-greenMedium">
+                        <h3 class="text-lg font-bold text-zelda-gold mb-3 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i> Datos Curiosos
+                        </h3>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-slate-300">
+                            <li>El nombre de Zelda proviene de <strong>Zelda Fitzgerald</strong>, esposa del escritor F. Scott Fitzgerald.</li>
+                            <li>La inspiración de Miyamoto surgió de sus exploraciones infantiles en bosques y cuevas cerca de Kioto.</li>
+                            <li>La sagrada <strong>Trifuerza</strong> representa los tres atributos: Poder, Sabiduría y Valor.</li>
+                            <li>Link es tradicionalmente diestro o zurdo dependiendo de la consola y la época de lanzamiento.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <p class="text-sm">
+                        ¿Quieres profundizar en el universo de la saga? Puedes visitar los siguientes recursos oficiales y comunitarios:
+                    </p>
+                    <div class="flex flex-wrap gap-4 mt-3">
+                        <a href="https://www.zelda.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-zelda-greenMedium hover:bg-zelda-greenBright text-white rounded-lg text-sm font-semibold transition-all border border-zelda-gold/40">
+                            Sitio Oficial de Zelda <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://nintendo.fandom.com/wiki/The_Legend_of_Zelda_(series)" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm font-semibold transition-all border border-slate-600">
+                            Zelda Wiki Fandom <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section id="multimedia" class="bg-zelda-cardBg border border-zelda-gold/20 rounded-xl p-6 sm:p-8 shadow-xl space-y-8">
+            <div class="flex items-center gap-3">
+                <i data-lucide="film" class="text-zelda-gold w-7 h-7"></i>
+                <h2 class="text-2xl font-bold text-zelda-gold">3. Galería Multimedia (Audio, Video e Imágenes)</h2>
+            </div>
+
+            <!-- Galería de Imágenes Semánticas -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-emerald-400">a. Galería de Imágenes con &lt;figure&gt; y &lt;figcaption&gt;</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <figure class="bg-zelda-greenDark/60 p-3 rounded-lg border border-slate-700 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80" alt="Link sosteniendo la espada en un bosque de fantasía" class="w-full h-48 object-cover rounded-md mb-3 transition-transform hover:scale-105 duration-300">
+                        <figcaption class="text-xs text-center text-slate-400 italic">
+                            Ilustración artística de un héroe de la fantasía clásica similar a Link en el bosque misterioso.
+                        </figcaption>
+                    </figure>
+
+                    <figure class="bg-zelda-greenDark/60 p-3 rounded-lg border border-slate-700 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80" alt="Castillo en las montañas con luz dorada" class="w-full h-48 object-cover rounded-md mb-3 transition-transform hover:scale-105 duration-300">
+                        <figcaption class="text-xs text-center text-slate-400 italic">
+                            Representación de un castillo legendario rodeado de montañas, evocando la majestuosidad de Hyrule.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <!-- Reproductor de Audio HTML5 -->
+            <div class="space-y-4 pt-4 border-t border-slate-800">
+                <h3 class="text-lg font-semibold text-emerald-400">b. Reproductor de Audio HTML5 con &lt;audio&gt;</h3>
+                <p class="text-sm text-slate-300">Escucha un fragmento o música de ambientación de fantasía usando el elemento nativo de audio:</p>
+                <div class="bg-zelda-greenDark/80 p-4 rounded-xl border border-zelda-gold/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-zelda-gold/20 rounded-full text-zelda-gold">
+                            <i data-lucide="music" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Tema de Aventura en Hyrule</h4>
+                            <p class="text-xs text-slate-400">Ambiente de Fantasía (Audio MP3)</p>
+                        </div>
+                    </div>
+                    <audio controls class="w-full sm:w-auto">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio HTML5.
+                    </audio>
+                </div>
+            </div>
+
+            <!-- Reproductor de Video HTML5 -->
+            <div class="space-y-4 pt-4 border-t border-slate-800">
+                <h3 class="text-lg font-semibold text-emerald-400">c. Reproductor de Video HTML5 con &lt;video&gt;</h3>
+                <p class="text-sm text-slate-300">Muestra visual de la jugabilidad y mundo interactivo usando la etiqueta nativa de video HTML5:</p>
+                <div class="bg-black rounded-xl overflow-hidden border border-zelda-gold/30 shadow-2xl">
+                    <video controls poster="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80" class="w-full max-h-[400px]">
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4">
+                        Tu navegador no admite la etiqueta de video.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="interactivo" class="bg-zelda-cardBg border border-zelda-gold/20 rounded-xl p-6 sm:p-8 shadow-xl space-y-8">
+            <div class="flex items-center gap-3">
+                <i data-lucide="sparkles" class="text-zelda-gold w-7 h-7"></i>
+                <h2 class="text-2xl font-bold text-zelda-gold">4. Elementos Interactivos y Semánticos HTML5 Integrados</h2>
+            </div>
+
+            <!-- Elemento Interactive 1: Details & Summary -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-semibold text-emerald-400">a. Plegables con &lt;details&gt; y &lt;summary&gt;</h3>
+                
+                <details class="group bg-zelda-greenDark/60 border border-slate-700 rounded-lg p-4 cursor-pointer transition-all">
+                    <summary class="font-bold text-zelda-gold flex justify-between items-center select-none">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="key" class="w-5 h-5 text-emerald-400"></i> ¿Cuáles son los tres tesoros de la Trifuerza?
+                        </span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="mt-3 text-sm text-slate-300 pt-3 border-t border-slate-800 space-y-2">
+                        <p><strong>1. Trifuerza del Poder:</strong> Asociada con Ganon, representa la fuerza física y mágica bruta.</p>
+                        <p><strong>2. Trifuerza de la Sabiduría:</strong> Asociada con la Princesa Zelda, representa el conocimiento y la templanza.</p>
+                        <p><strong>3. Trifuerza del Valor:</strong> Portada por Link, representa la valentía para enfrentar cualquier adversidad.</p>
+                    </div>
+                </details>
+
+                <details class="group bg-zelda-greenDark/60 border border-slate-700 rounded-lg p-4 cursor-pointer transition-all">
+                    <summary class="font-bold text-zelda-gold flex justify-between items-center select-none">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-emerald-400"></i> Regiones Icónicas del Reino de Hyrule
+                        </span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="mt-3 text-sm text-slate-300 pt-3 border-t border-slate-800">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Montaña de la Muerte:</strong> Hogar de los resistentes Goron.</li>
+                            <li><strong>Dominio Zora:</strong> Región acuática de arquitectura deslumbrante.</li>
+                            <li><strong>Bosque Perdido:</strong> Laberinto místico que protege la Espada Maestra.</li>
+                            <li><strong>Gerudo Town:</strong> Gran ciudad en medio del vasto desierto.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Elemento Interactivo 2: Progress -->
+            <div class="space-y-3 pt-4 border-t border-slate-800">
+                <h3 class="text-lg font-semibold text-emerald-400">b. Indicador de Progreso con &lt;progress&gt;</h3>
+                <p class="text-sm text-slate-300">Medidor interactivo semántico del héroe:</p>
+
+                <div class="bg-zelda-greenDark/60 p-5 rounded-lg border border-slate-700 space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-zelda-gold">Progreso en la Búsqueda de Contenedores de Corazón:</span>
+                            <span id="progressText" class="text-emerald-400">75% (15 / 20)</span>
+                        </div>
+                        <progress id="questProgress" value="75" max="100" class="w-full h-4"></progress>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="updateProgress(-10)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded border border-slate-600 transition-colors">
+                            - Disminuir
+                        </button>
+                        <button onclick="updateProgress(10)" class="px-3 py-1 bg-zelda-greenMedium hover:bg-zelda-greenBright text-white text-xs rounded border border-zelda-gold/40 transition-colors">
+                            + Aumentar Progreso
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elemento Interactivo 3: Dialog Modal -->
+            <div class="space-y-3 pt-4 border-t border-slate-800">
+                <h3 class="text-lg font-semibold text-emerald-400">c. Modal Nativo de HTML5 con &lt;dialog&gt;</h3>
+                <p class="text-sm text-slate-300">Haz clic en el botón para desplegar un mensaje secreto interactivo mediante la etiqueta semántica <code class="text-zelda-gold">&lt;dialog&gt;</code>:</p>
+
+                <button onclick="document.getElementById('secretDialog').showModal()" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-zelda-gold to-yellow-500 hover:from-yellow-400 hover:to-zelda-gold text-zelda-greenDark font-bold rounded-lg shadow-lg hover:shadow-zelda-gold/20 transition-all transform hover:-translate-y-0.5">
+                    <i data-lucide="scroll" class="w-5 h-5"></i> Abrir Mensaje Secreto del Gran Árbol Deku
+                </button>
+
+                <!-- Diálogo Modal Nativo -->
+                <dialog id="secretDialog" class="bg-zelda-cardBg text-slate-200 border-2 border-zelda-gold rounded-xl p-6 max-w-md w-11/12 shadow-2xl backdrop:bg-black/80">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-zelda-gold/30 pb-3">
+                            <h4 class="text-lg font-bold text-zelda-gold flex items-center gap-2">
+                                <i data-lucide="shield-alert" class="w-5 h-5"></i> ¡Mensaje de Hyrule!
+                            </h4>
+                            <button onclick="document.getElementById('secretDialog').close()" class="text-slate-400 hover:text-white">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <p class="text-sm leading-relaxed text-slate-300">
+                            "Es peligroso ir solo. ¡Toma esto! Has dominado el uso de los elementos semánticos e interactivos en HTML5."
+                        </p>
+                        <div class="bg-zelda-greenDark p-3 rounded text-xs text-emerald-300 border border-emerald-800">
+                            <strong>Nota Técnica:</strong> Este mensaje se renderiza utilizando la etiqueta nativa <code>&lt;dialog&gt;</code> de HTML5 con el método JS <code>showModal()</code>.
+                        </div>
+                        <div class="flex justify-end pt-2">
+                            <button onclick="document.getElementById('secretDialog').close()" class="px-4 py-2 bg-zelda-greenMedium hover:bg-zelda-greenBright text-white text-xs font-bold rounded transition-colors">
+                                Entendido
+                            </button>
+                        </div>
+                    </div>
+                </dialog>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-zelda-gold/30 bg-zelda-greenDark/90 mt-12 py-8 px-4 text-center text-xs text-slate-400">
+        <div class="max-w-6xl mx-auto space-y-3">
+            <p class="flex items-center justify-center gap-1">
+                <span>Desarrollado para demostración de HTML5 Semántico e Interactivo</span>
+                <i data-lucide="heart" class="w-4 h-4 text-red-500 inline fill-red-500"></i>
+            </p>
+            <p>The Legend of Zelda es una marca registrada de Nintendo. Página con fines puramente educativos.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // Control dinámico de la barra de progreso <progress>
+        function updateProgress(delta) {
+            const progressBar = document.getElementById('questProgress');
+            const progressText = document.getElementById('progressText');
+            
+            let newValue = parseInt(progressBar.value) + delta;
+            if (newValue < 0) newValue = 0;
+            if (newValue > 100) newValue = 100;
+            
+            progressBar.value = newValue;
+            const currentHeart = Math.round((newValue / 100) * 20);
+            progressText.innerText = `${newValue}% (${currentHeart} / 20)`;
+        }
+    </script>
+</body>
+</html>
