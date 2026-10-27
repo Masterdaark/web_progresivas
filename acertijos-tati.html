@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Castillo de la Noche - Enigma de Sylvia Plath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #050203;
+      --card-bg: #0d0709;
+      --crimson: #8b0000;
+      --bright-red: #dc143c;
+      --gold: #d4af37;
+      --text-light: #e8dede;
+      --text-muted: #a39296;
+      --border-gothic: #3a0d14;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-light);
+      font-family: 'Playfair Display', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Canvas para efectos visuales (pétalos y murciélagos) */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Contenedor Principal estilo Marco Gótico */
+    .gothic-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 680px;
+      background-color: var(--card-bg);
+      border: 3px solid var(--crimson);
+      outline: 2px solid var(--gold);
+      outline-offset: -8px;
+      box-shadow: 0 0 35px rgba(139, 0, 0, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.95);
+      border-radius: 4px;
+      padding: 40px 30px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    /* Adornos de las esquinas */
+    .gothic-container::before, .gothic-container::after {
+      content: "✦";
+      position: absolute;
+      color: var(--gold);
+      font-size: 20px;
+      z-index: 3;
+    }
+    .gothic-container::before { top: 12px; left: 15px; }
+    .gothic-container::after { top: 12px; right: 15px; }
+
+    /* Control de Sonido */
+    .audio-toggle {
+      position: absolute;
+      top: 15px;
+      right: 45px;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .audio-toggle:hover { opacity: 1; }
+
+    h1.title {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 2.5rem;
+      color: var(--bright-red);
+      text-shadow: 0 0 10px rgba(220, 20, 60, 0.6);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    /* Indicador de Candados */
+    .locks-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .lock-icon {
+      font-size: 1.6rem;
+      color: #4a383c;
+      transition: all 0.5s ease;
+      filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+    }
+
+    .lock-icon.unlocked {
+      color: var(--gold);
+      text-shadow: 0 0 12px var(--gold);
+      transform: scale(1.15) rotate(-10deg);
+    }
+
+    /* Tarjetas de acertijos */
+    .riddle-card {
+      display: none;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .riddle-card.active {
+      display: block;
+    }
+
+    .riddle-number {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--bright-red);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .riddle-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--text-light);
+      margin-bottom: 25px;
+      font-style: italic;
+      padding: 0 10px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn-option {
+      background: linear-gradient(180deg, #18090c 0%, #0d0406 100%);
+      border: 1px solid var(--border-gothic);
+      color: var(--text-light);
+      padding: 14px 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      position: relative;
+    }
+
+    .btn-option:hover {
+      border-color: var(--bright-red);
+      background: #240b10;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+      transform: translateX(4px);
+    }
+
+    /* Animación Error */
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Revelación Final */
+    .vault-reveal {
+      display: none;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    .vault-reveal.active {
+      display: block;
+    }
+
+    .birthday-card {
+      background: rgba(18, 5, 8, 0.9);
+      border: 1px solid var(--gold);
+      padding: 30px 20px;
+      margin-top: 15px;
+      position: relative;
+    }
+
+    .birthday-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #f1e6e6;
+      text-align: left;
+      white-space: pre-line;
+    }
+
+    .signature {
+      text-align: right;
+      margin-top: 20px;
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+
+    .btn-restart {
+      margin-top: 25px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 10px 25px;
+      font-family: 'Cinzel Decorative', serif;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-restart:hover {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="fx-canvas"></canvas>
+
+  <div class="gothic-container" id="main-card">
+    <button class="audio-toggle" id="audio-btn" title="Activar/Desactivar Sonido">🔊</button>
+    
+    <h1 class="title">El Castillo de la Noche</h1>
+    <div class="subtitle">El Enigma de Sylvia Plath</div>
+
+    <!-- Candados de Progreso -->
+    <div class="locks-container">
+      <span class="lock-icon" id="lock-0">🔒</span>
+      <span class="lock-icon" id="lock-1">🔒</span>
+      <span class="lock-icon" id="lock-2">🔒</span>
+      <span class="lock-icon" id="lock-3">🔒</span>
+      <span class="lock-icon" id="lock-4">🔒</span>
+    </div>
+
+    <!-- Acertijo 1 -->
+    <div class="riddle-card active" id="riddle-0">
+      <div class="riddle-number">I. El Primer Enigma</div>
+      <p class="riddle-text">"En mi única novela, Esther Greenwood se siente atrapada bajo una estructura que distorsiona el mundo exterior. ¿Cuál es el título de esta célebre obra?"</p>
+      <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(0, 0)">A) La campana de cristal</button>
+        <button class="btn-option" onclick="checkAnswer(0, 1)">B) Tres mujeres</button>
+        <button class="btn-option" onclick="checkAnswer(0, 2)">C) El coloso</button>
+      </div>
+    </div>
+
+    <!-- Acertijo 2 -->
+    <div class="riddle-card" id="riddle-1">
+      <div class="riddle-number">II. El Segundo Enigma</div>
+      <p class="riddle-text">"Tengo nueve vidas como el gato y, al igual que una criatura de las sombras, resucito de entre las cenizas. ¿Qué famoso poema relata este renacer?"</p>
+      <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(1, 0)">A) Ariel</button>
+        <button class="btn-option" onclick="checkAnswer(1, 1)">B) Lady Lazarus</button>
+        <button class="btn-option" onclick="checkAnswer(1, 2)">C) Tulipanes</button>
+      </div>
+    </div>
+
+    <!-- Acertijo 3 -->
+    <div class="riddle-card" id="riddle-2">
+      <div class="riddle-number">III. El Tercer Enigma</div>
+      <p class="riddle-text">"Cuando la novela se publicó por primera vez en el Reino Unido en 1963, Sylvia Plath decidió resguardar su identidad bajo un seudónimo misterioso. ¿Cuál fue?"</p>
+      <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(2, 0)">A) Clara Emilie</button>
+        <button class="btn-option" onclick="checkAnswer(2, 1)">B) Victoria Lucas</button>
+        <button class="btn-option" onclick="checkAnswer(2, 2)">C) Jane Gray</button>
+      </div>
+    </div>
+
+    <!-- Acertijo 4 -->
+    <div class="riddle-card" id="riddle-3">
+      <div class="riddle-number">IV. El Cuarto Enigma</div>
+      <p class="riddle-text">"En su impactante poema 'Daddy', Sylvia utiliza la metáfora de un ser oscuro con una estaca en el corazón que bebió su sangre durante siete años. ¿A qué figura hace referencia?"</p>
+      <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(3, 0)">A) Un fantasma</button>
+        <button class="btn-option" onclick="checkAnswer(3, 1)">B) Un vampiro</button>
+        <button class="btn-option" onclick="checkAnswer(3, 2)">C) Una sombra</button>
+      </div>
+    </div>
+
+    <!-- Acertijo 5 -->
+    <div class="riddle-card" id="riddle-4">
+      <div class="riddle-number">V. El Quinto Enigma</div>
+      <p class="riddle-text">"Soy plateado y exacto. No tengo prejuicios y todo lo que veo lo trago inmediatamente tal como es, sin empañarlo por amor o tirria. ¿Qué poema habla en mi voz?"</p>
+      <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(4, 0)">A) Espejo (Mirror)</button>
+        <button class="btn-option" onclick="checkAnswer(4, 1)">B) La luna y el tejuelo</button>
+        <button class="btn-option" onclick="checkAnswer(4, 2)">C) La colmena</button>
+      </div>
+    </div>
+
+    <!-- Revelación Final -->
+    <div class="vault-reveal" id="vault-reveal">
+      <h2 style="font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 10px;">¡Bóveda Desbloqueada!</h2>
+      <div class="birthday-card">
+        <div class="birthday-text">¡Muy buenos días y un muy feliz cumpleaños! 💐🌞✨
+
+Hoy no es un día cualquiera; es un día verdaderamente especial. ¿Por qué? Porque celebramos el nacimiento de una de las personas más divertidas, inteligentes y misteriosas que he tenido el gusto de conocer. 
+
+Quiero darte las gracias por permitirme formar parte de tu vida y conocer un poco de la gran chica que eres. Gracias por alegrar los días de quienes te rodean con tu vibra única, tus divertidas ocurrencias y esa risa traviesa que, por cierto, me encanta. 
+
+Genuinamente me sacas una sonrisa y me emociono cada vez que veo un mensaje o una llamada tuya. De corazón, espero que este nuevo año de vida nos dé la oportunidad de compartir mucho más tiempo juntos y tener la dicha de seguir conociendo a una niña tan genial e interesante como tú. 
+
+Disfruta al máximo tu día, te mereces lo mejor. 😊</div>
+      </div>
+      <button class="btn-restart" onclick="restartGame()">Volver a jugar</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Configuración del juego
+    const correctAnswers = [0, 1, 1, 1, 0]; // A, B, B, B, A
+    let currentRiddle = 0;
+    let soundEnabled = true;
+
+    // Sintetizador de audio Web Audio API
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      initAudio();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'unlock') {
+        // Sonido de candado abriéndose (Campana/Gong gótico)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.3);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        osc.start(now);
+        osc.stop(now + 0.5);
+      } else if (type === 'error') {
+        // Tono bajo de error
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'victory') {
+        // Acorde celestial/gótico
+        [261.63, 329.63, 392.00, 523.25].forEach((freq, idx) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.frequency.setValueAtTime(freq, now + idx * 0.1);
+          g.gain.setValueAtTime(0.2, now + idx * 0.1);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+          o.start(now + idx * 0.1);
+          o.stop(now + 1.8);
+        });
+      }
+    }
+
+    // Botón de audio
+    document.getElementById('audio-btn').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('audio-btn').innerText = soundEnabled ? '🔊' : '🔇';
+    });
+
+    // Validar respuesta
+    function checkAnswer(riddleIdx, selectedIdx) {
+      const container = document.getElementById('main-card');
+
+      if (selectedIdx === correctAnswers[riddleIdx]) {
+        // Respuesta Correcta
+        playSound('unlock');
+        
+        // Desbloquear icono de candado
+        const lockIcon = document.getElementById(`lock-${riddleIdx}`);
+        lockIcon.innerText = '🔓';
+        lockIcon.classList.add('unlocked');
+
+        // Ocultar acertijo actual
+        document.getElementById(`riddle-${riddleIdx}`).classList.remove('active');
+
+        currentRiddle++;
+
+        if (currentRiddle < 5) {
+          // Mostrar siguiente acertijo
+          document.getElementById(`riddle-${currentRiddle}`).classList.add('active');
+        } else {
+          // Revelar Victoria
+          setTimeout(() => {
+            playSound('victory');
+            document.getElementById('vault-reveal').classList.add('active');
+          }, 400);
+        }
+      } else {
+        // Respuesta Incorrecta
+        playSound('error');
+        container.classList.add('shake');
+        setTimeout(() => {
+          container.classList.remove('shake');
+        }, 400);
+      }
+    }
+
+    // Reiniciar
+    function restartGame() {
+      currentRiddle = 0;
+      for (let i = 0; i < 5; i++) {
+        const lock = document.getElementById(`lock-${i}`);
+        lock.innerText = '🔒';
+        lock.classList.remove('unlocked');
+        document.getElementById(`riddle-${i}`).classList.remove('active');
+      }
+      document.getElementById('vault-reveal').classList.remove('active');
+      document.getElementById('riddle-0').classList.add('active');
+    }
+
+    // Canvas de Fondo (Pétalos de rosa y Murciélagos)
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const particles = [];
+    for (let i = 0; i < 35; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 5 + 3,
+        speedY: Math.random() * 1.2 + 0.5,
+        speedX: Math.sin(Math.random()) * 0.8,
+        angle: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 0.02,
+        type: Math.random() > 0.85 ? 'bat' : 'petal'
+      });
+    }
+
+    function drawBat(ctx, x, y, size) {
+      ctx.fillStyle = '#1c050a';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x - size*2, y - size*2, x - size*3, y);
+      ctx.quadraticCurveTo(x - size, y + size, x, y + size*0.5);
+      ctx.quadraticCurveTo(x + size, y + size, x + size*3, y);
+      ctx.quadraticCurveTo(x + size*2, y - size*2, x, y);
+      ctx.fill();
+    }
+
+    function animateFX() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.y += p.speedY;
+        p.x += Math.sin(p.y * 0.01) * 0.5;
+        p.angle += p.spin;
+
+        if (p.y > canvas.height + 20) {
+          p.y = -20;
+          p.x = Math.random() * canvas.width;
+        }
+
+        if (p.type === 'petal') {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.fillStyle = 'rgba(139, 0, 0, 0.6)';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size, p.size * 1.8, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        } else {
+          drawBat(ctx, p.x, p.y, p.size);
+        }
+      });
+
+      requestAnimationFrame(animateFX);
+    }
+    animateFX();
+  </script>
+</body>
+</html>
