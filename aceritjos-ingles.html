@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halloween Bat Hunt - Uncover the Secret Riddle</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Creepster & MedievalSharp -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Creepster&family=MedievalSharp&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #07030d;
+            color: #f3e8ff;
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .font-creepster {
+            font-family: 'Creepster', cursive;
+        }
+
+        .font-medieval {
+            font-family: 'MedievalSharp', cursive;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Moon Glow Effect */
+        .moon-glow {
+            box-shadow: 0 0 50px #ffea79, 0 0 100px #ffb703, inset 0 0 20px #fff7c2;
+        }
+
+        /* Floating Fog Effect */
+        .fog-layer {
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, rgba(15, 7, 32, 0) 70%);
+            animation: fogMove 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes fogMove {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-20px, 15px); }
+            100% { transform: scale(1) translate(20px, -10px); }
+        }
+
+        /* Bat Wing Flap Animation */
+        .wing-left {
+            transform-origin: right center;
+            animation: flapLeft 0.22s ease-in-out infinite alternate;
+        }
+
+        .wing-right {
+            transform-origin: left center;
+            animation: flapRight 0.22s ease-in-out infinite alternate;
+        }
+
+        @keyframes flapLeft {
+            0% { transform: rotate(0deg) scaleY(1); }
+            100% { transform: rotate(-35deg) scaleY(0.7); }
+        }
+
+        @keyframes flapRight {
+            0% { transform: rotate(0deg) scaleY(1); }
+            100% { transform: rotate(35deg) scaleY(0.7); }
+        }
+
+        /* Parchment Scroll styling */
+        .parchment {
+            background: #e8d3a7;
+            background-image: 
+                radial-gradient(#c2a263 1px, transparent 0),
+                linear-gradient(to bottom, #f3e5c8 0%, #d8ba82 100%);
+            background-size: 24px 24px, 100% 100%;
+            border: 3px solid #543918;
+            box-shadow: 
+                0 0 0 2px #9c7138,
+                0 15px 35px rgba(0, 0, 0, 0.8),
+                inset 0 0 50px rgba(84, 57, 24, 0.4);
+            color: #261608;
+            position: relative;
+        }
+
+        /* Weathered Edge Effect */
+        .parchment::before, .parchment::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 12px;
+            left: 0;
+            background-size: 20px 100%;
+        }
+
+        .parchment::before {
+            top: -12px;
+            background-image: radial-gradient(circle at 10px 12px, transparent 10px, #543918 11px);
+        }
+
+        .parchment::after {
+            bottom: -12px;
+            background-image: radial-gradient(circle at 10px 0, transparent 10px, #543918 11px);
+        }
+
+        /* Floating Score indicator */
+        .score-pop {
+            animation: floatUpFade 0.8s ease-out forwards;
+        }
+
+        @keyframes floatUpFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(1.4); }
+        }
+
+        /* Spooky Pulsing Button */
+        .spooky-btn {
+            background: linear-gradient(135deg, #d97706 0%, #7c2d12 100%);
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .spooky-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+        }
+
+        .spooky-btn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between items-center relative overflow-hidden bg-gradient-to-b from-slate-950 via-purple-950 to-black select-none">
+
+    <!-- Ambient Spooky Background Effects -->
+    <div class="absolute inset-0 pointer-events-none fog-layer z-0"></div>
+
+    <!-- Glowing Full Moon -->
+    <div class="absolute top-6 right-8 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-amber-100 moon-glow pointer-events-none z-0 opacity-90 flex items-center justify-center">
+        <!-- Subtle moon craters -->
+        <div class="w-5 h-5 bg-amber-200/40 rounded-full absolute top-4 left-6"></div>
+        <div class="w-8 h-8 bg-amber-200/30 rounded-full absolute bottom-6 right-6"></div>
+        <div class="w-4 h-4 bg-amber-200/40 rounded-full absolute bottom-10 left-8"></div>
+    </div>
+
+    <!-- Top Navigation & Scoreboard -->
+    <header class="w-full max-w-4xl px-4 pt-4 sm:pt-6 z-20 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <!-- Title -->
+        <div class="text-center sm:text-left">
+            <h1 class="text-3xl sm:text-5xl font-creepster text-amber-500 tracking-wider drop-shadow-[0_4px_10px_rgba(245,158,11,0.5)]">
+                🦇 HALLOWEEN HUNT
+            </h1>
+            <p class="text-xs sm:text-sm text-purple-300 font-medium opacity-90 mt-0.5">
+                Catch 10 flying bats to unlock the secret riddle!
+            </p>
+        </div>
+
+        <!-- Controls & Progress Container -->
+        <div class="flex items-center gap-4 bg-slate-900/80 backdrop-blur-md border border-purple-500/30 rounded-2xl px-5 py-2.5 shadow-lg shadow-purple-950/50">
+            <!-- Counter -->
+            <div class="flex flex-col items-center sm:items-start">
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-semibold">Bats Caught</span>
+                <div class="flex items-center gap-2">
+                    <span id="score-text" class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">0 / 10</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-24 sm:w-32 bg-purple-950/80 rounded-full h-3 p-0.5 border border-purple-800/50 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-300 w-0"></div>
+            </div>
+
+            <!-- Sound Toggle Button -->
+            <button id="sound-btn" title="Toggle Sound" class="p-2 rounded-xl bg-purple-900/50 border border-purple-700/50 text-amber-400 hover:bg-purple-800/60 transition-colors">
+                <svg id="sound-on-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+                </svg>
+                <svg id="sound-off-icon" class="w-5 h-5 hidden text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Game Area (Bats Fly Here) -->
+    <main id="game-container" class="relative flex-1 w-full max-w-6xl my-2 cursor-crosshair z-10 overflow-hidden">
+        <!-- Floating Canvas for Particle Effects -->
+        <canvas id="particle-canvas" class="absolute inset-0 pointer-events-none z-20"></canvas>
+        
+        <!-- Interactive Instruction Banner for Game Start -->
+        <div id="start-banner" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10 pointer-events-none transition-opacity duration-500">
+            <div class="bg-black/60 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-6 max-w-sm shadow-2xl animate-bounce">
+                <span class="text-4xl">🦇</span>
+                <p class="text-lg font-bold text-amber-300 mt-2">Tap or Click the bats!</p>
+                <p class="text-xs text-purple-300 mt-1">Catch 10 bats to unlock the secret riddle</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Graveyard Silhouette Graphic -->
+    <footer class="w-full relative z-0 pointer-events-none">
+        <svg class="w-full h-16 sm:h-24 text-slate-950 fill-current" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <!-- Spooky Trees & Tombstones Path -->
+            <path d="M0,120 L0,90 Q30,85 50,95 Q80,105 110,85 L115,70 L120,85 Q150,90 180,75 L185,50 L190,45 L195,50 L200,75 Q240,100 280,80 Q320,60 360,90 Q400,105 450,75 L455,55 L460,75 Q500,95 550,85 Q600,75 640,95 Q680,105 720,80 L725,40 L730,80 Q770,95 820,85 Q870,75 910,95 Q950,110 1000,80 L1005,60 L1010,80 Q1050,95 1100,85 Q1150,75 1200,90 L1200,120 Z"/>
+        </svg>
+    </footer>
+
+    <!-- End Game Riddle Scroll Modal (Hidden initially) -->
+    <div id="riddle-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-700">
+        <div class="parchment rounded-lg p-6 sm:p-10 max-w-lg w-full transform scale-90 transition-transform duration-500 id-modal-box">
+            
+            <!-- Modal Header with Skull Icon matching design -->
+            <div class="flex justify-between items-start border-b-2 border-amber-900/40 pb-4 mb-5">
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl text-amber-900">📜</span>
+                    <h2 class="text-xl sm:text-2xl font-bold font-cinzel text-amber-950 tracking-wider">
+                        1. LOCATION
+                    </h2>
+                </div>
+                <!-- Skull Graphic -->
+                <div class="w-10 h-10 flex items-center justify-center bg-amber-950/10 rounded-full border border-amber-900/30">
+                    <svg class="w-7 h-7 text-amber-950" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C7.58 2 4 5.58 4 10c0 2.5 1.14 4.73 2.93 6.21C7.29 16.5 8 17.5 8 18.5V20c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-1.5c0-1 .71-2 1.07-2.29C18.86 14.73 20 12.5 20 10c0-4.42-3.58-8-8-8zm-3 11c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm6 0c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13zm-5 5h4v1h-4v-1z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Translated Riddle Content -->
+            <div class="my-6">
+                <p class="text-lg sm:text-xl font-medieval text-amber-950 leading-relaxed sm:leading-loose text-center sm:text-left italic">
+                    "I am not a ghost, but in life I was a pioneer of a world without screens. Seek the tomb where numbers become instructions."
+                </p>
+            </div>
+
+            <!-- Divider Line -->
+            <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-amber-900/40 to-transparent my-6"></div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <button id="restart-btn" class="spooky-btn text-amber-100 font-bold px-6 py-3 rounded-xl w-full sm:w-auto text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Play Again
+                </button>
+
+                <!-- Optional Hint Toggle Button -->
+                <button id="hint-btn" class="text-xs font-semibold text-amber-900/70 hover:text-amber-950 underline transition-colors py-2">
+                    💡 Who could this pioneer be?
+                </button>
+            </div>
+
+            <!-- Hidden Hint Reveal -->
+            <div id="hint-text" class="hidden mt-4 p-3 bg-amber-900/10 rounded-lg border border-amber-900/20 text-xs font-serif text-amber-900 text-center">
+                <strong>Historical Hint:</strong> Think of Ada Lovelace — the visionary who wrote the first algorithm long before electronic computers!
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Game State Variables
+        const TOTAL_BATS_TO_WIN = 10;
+        let score = 0;
+        let isGameActive = true;
+        let soundEnabled = true;
+        let activeBats = [];
+        let animationFrameId = null;
+
+        // DOM Element References
+        const gameContainer = document.getElementById('game-container');
+        const scoreText = document.getElementById('score-text');
+        const progressBar = document.getElementById('progress-bar');
+        const startBanner = document.getElementById('start-banner');
+        const riddleModal = document.getElementById('riddle-modal');
+        const restartBtn = document.getElementById('restart-btn');
+        const soundBtn = document.getElementById('sound-btn');
+        const soundOnIcon = document.getElementById('sound-on-icon');
+        const soundOffIcon = document.getElementById('sound-off-icon');
+        const hintBtn = document.getElementById('hint-btn');
+        const hintText = document.getElementById('hint-text');
+
+        // Particle Canvas Setup
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = gameContainer.clientWidth;
+            canvas.height = gameContainer.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Audio Synthesizer via Web Audio API
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Play Pop / Squeak Sound Effect
+        function playPopSound() {
+            if (!soundEnabled) return;
+            initAudio();
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                // Pitch drop: 700Hz to 200Hz
+                osc.frequency.setValueAtTime(750, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.12);
+
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.12);
+            } catch (e) {
+                console.error('Audio error:', e);
+            }
+        }
+
+        // Play Victory Spooky Fanfare
+        function playVictorySound() {
+            if (!soundEnabled) return;
+            initAudio();
+
+            try {
+                const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 622.25]; // Minor arpeggio
+                notes.forEach((freq, index) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sawtooth';
+                    osc.frequency.value = freq;
+
+                    const startTime = audioCtx.currentTime + (index * 0.12);
+                    gain.gain.setValueAtTime(0, startTime);
+                    gain.gain.linearRampToValueAtTime(0.15, startTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.45);
+                });
+            } catch (e) {
+                console.error('Audio error:', e);
+            }
+        }
+
+        // SVG Bat Graphic Template Generator
+        function createBatElement() {
+            const batWrapper = document.createElement('div');
+            batWrapper.className = 'absolute cursor-pointer touch-manipulation z-30 select-none transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 hover:scale-110';
+            
+            // Random size variation (40px to 65px wide)
+            const size = Math.floor(Math.random() * 25) + 42;
+            
+            batWrapper.style.width = `${size}px`;
+            batWrapper.style.height = `${Math.floor(size * 0.6)}px`;
+
+            // SVG Bat with flappable wings and glowing eyes
+            batWrapper.innerHTML = `
+                <svg viewBox="0 0 100 60" class="w-full h-full drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                    <!-- Left Wing -->
+                    <g class="wing-left">
+                        <path d="M50 30 Q 30 5, 5 15 Q -5 30, 20 40 Q 35 42, 50 30 Z" fill="#1e102d" stroke="#581c87" stroke-width="1.5"/>
+                    </g>
+                    <!-- Right Wing -->
+                    <g class="wing-right">
+                        <path d="M50 30 Q 70 5, 95 15 Q 105 30, 80 40 Q 65 42, 50 30 Z" fill="#1e102d" stroke="#581c87" stroke-width="1.5"/>
+                    </g>
+                    <!-- Body & Head -->
+                    <ellipse cx="50" cy="32" rx="10" ry="14" fill="#0f0716" />
+                    <!-- Ears -->
+                    <polygon points="43,22 47,12 49,20" fill="#0f0716" />
+                    <polygon points="57,22 53,12 51,20" fill="#0f0716" />
+                    <!-- Glowing Eyes -->
+                    <circle cx="46" cy="28" r="2.2" fill="#ff2200" />
+                    <circle cx="54" cy="28" r="2.2" fill="#ff2200" />
+                    <!-- Fangs -->
+                    <polygon points="47,36 48,40 49,36" fill="#ffffff" />
+                    <polygon points="51,36 52,40 53,36" fill="#ffffff" />
+                </svg>
+            `;
+
+            return batWrapper;
+        }
+
+        // Bat Object Class
+        class Bat {
+            constructor() {
+                this.element = createBatElement();
+                
+                const padding = 60;
+                const width = gameContainer.clientWidth - padding * 2;
+                const height = gameContainer.clientHeight - padding * 2;
+
+                this.x = Math.random() * width + padding;
+                this.y = Math.random() * height + padding;
+
+                // Speed vectors
+                const speed = Math.random() * 2 + 1.8;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+
+                // Sine oscillation for organic flight path
+                this.waveOffset = Math.random() * 100;
+                this.waveSpeed = Math.random() * 0.05 + 0.03;
+
+                this.element.style.left = `${this.x}px`;
+                this.element.style.top = `${this.y}px`;
+
+                // Hit listener (supports mouse and touch)
+                const onHit = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (isGameActive) {
+                        popBat(this);
+                    }
+                };
+
+                this.element.addEventListener('mousedown', onHit);
+                this.element.addEventListener('touchstart', onHit, { passive: false });
+
+                gameContainer.appendChild(this.element);
+            }
+
+            update() {
+                this.waveOffset += this.waveSpeed;
+                
+                // Add gentle wobble perpendicular to flight
+                this.x += this.vx + Math.sin(this.waveOffset) * 1.2;
+                this.y += this.vy + Math.cos(this.waveOffset) * 0.8;
+
+                // Screen Boundary Bounce
+                const bounds = 40;
+                const maxX = gameContainer.clientWidth - bounds;
+                const maxY = gameContainer.clientHeight - bounds;
+
+                if (this.x < bounds) { this.x = bounds; this.vx *= -1; }
+                if (this.x > maxX) { this.x = maxX; this.vx *= -1; }
+                if (this.y < bounds) { this.y = bounds; this.vy *= -1; }
+                if (this.y > maxY) { this.y = maxY; this.vy *= -1; }
+
+                // Flip graphic direction based on velocity
+                const flip = this.vx < 0 ? 'scaleX(-1)' : 'scaleX(1)';
+                this.element.style.transform = `translate(-50%, -50%) ${flip}`;
+                this.element.style.left = `${this.x}px`;
+                this.element.style.top = `${this.y}px`;
+            }
+
+            destroy() {
+                if (this.element && this.element.parentNode) {
+                    this.element.parentNode.removeChild(this.element);
+                }
+            }
+        }
+
+        // Particle System for Bat Pop Effect
+        function createPopParticles(x, y) {
+            const particleCount = 18;
+            const colors = ['#f59e0b', '#d97706', '#a855f7', '#7e22ce', '#ffffff'];
+
+            for (let i = 0; i < particleCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: Math.random() * 0.03 + 0.02
+                });
+            }
+        }
+
+        function createFloatingText(x, y, text) {
+            const popup = document.createElement('div');
+            popup.className = 'absolute text-amber-400 font-creepster text-2xl font-bold pointer-events-none z-40 score-pop';
+            popup.innerText = text;
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+            gameContainer.appendChild(popup);
+
+            setTimeout(() => {
+                if (popup.parentNode) popup.parentNode.removeChild(popup);
+            }, 800);
+        }
+
+        function updateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.08; // subtle gravity
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Pop Bat Action
+        function popBat(bat) {
+            // Remove bat from array & DOM
+            const index = activeBats.indexOf(bat);
+            if (index > -1) {
+                activeBats.splice(index, 1);
+            }
+
+            // Trigger Pop Audio & Visual Effects
+            playPopSound();
+            createPopParticles(bat.x, bat.y);
+            createFloatingText(bat.x, bat.y, "+1");
+            bat.destroy();
+
+            // Hide start banner if active
+            if (startBanner.style.opacity !== '0') {
+                startBanner.style.opacity = '0';
+            }
+
+            // Update Score
+            score++;
+            scoreText.innerText = `${score} / ${TOTAL_BATS_TO_WIN}`;
+            const progressPercent = (score / TOTAL_BATS_TO_WIN) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Check Win Condition
+            if (score >= TOTAL_BATS_TO_WIN) {
+                triggerWinSequence();
+            } else {
+                // Maintain 4 bats on screen
+                spawnBat();
+            }
+        }
+
+        // Maintain fixed bat population
+        function spawnBat() {
+            if (!isGameActive) return;
+            if (activeBats.length < 4 && (score + activeBats.length) < TOTAL_BATS_TO_WIN + 3) {
+                activeBats.push(new Bat());
+            }
+        }
+
+        // Main Animation Loop
+        function gameLoop() {
+            if (isGameActive) {
+                activeBats.forEach(bat => bat.update());
+            }
+            updateParticles();
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // Win Sequence & Riddle Scroll Reveal
+        function triggerWinSequence() {
+            isGameActive = false;
+            playVictorySound();
+
+            // Clear remaining bats
+            activeBats.forEach(bat => bat.destroy());
+            activeBats = [];
+
+            // Delay modal fade-in for smooth transition
+            setTimeout(() => {
+                riddleModal.classList.remove('pointer-events-none', 'opacity-0');
+                riddleModal.classList.add('opacity-100');
+                
+                const box = riddleModal.querySelector('.id-modal-box');
+                if (box) {
+                    box.classList.remove('scale-90');
+                    box.classList.add('scale-100');
+                }
+            }, 400);
+        }
+
+        // Reset Game
+        function resetGame() {
+            score = 0;
+            isGameActive = true;
+            scoreText.innerText = `0 / ${TOTAL_BATS_TO_WIN}`;
+            progressBar.style.width = '0%';
+            hintText.classList.add('hidden');
+
+            // Hide Modal
+            riddleModal.classList.add('pointer-events-none', 'opacity-0');
+            riddleModal.classList.remove('opacity-100');
+            const box = riddleModal.querySelector('.id-modal-box');
+            if (box) {
+                box.classList.add('scale-90');
+                box.classList.remove('scale-100');
+            }
+
+            // Clear bats
+            activeBats.forEach(bat => bat.destroy());
+            activeBats = [];
+
+            // Spawn initial 4 bats
+            for (let i = 0; i < 4; i++) {
+                spawnBat();
+            }
+        }
+
+        // Sound Toggle
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                soundOnIcon.classList.remove('hidden');
+                soundOffIcon.classList.add('hidden');
+                initAudio();
+            } else {
+                soundOnIcon.classList.add('hidden');
+                soundOffIcon.classList.remove('hidden');
+            }
+        });
+
+        // Restart Button
+        restartBtn.addEventListener('click', resetGame);
+
+        // Hint Toggle
+        hintBtn.addEventListener('click', () => {
+            hintText.classList.toggle('hidden');
+        });
+
+        // Initialize Game on Load
+        window.onload = function() {
+            resizeCanvas();
+            resetGame();
+            gameLoop();
+        };
+    </script>
+</body>
+</html>
