@@ -120,6 +120,31 @@
             100% { opacity: 0; transform: translateY(-40px) scale(1.4); }
         }
 
+        /* Quiz Feedback Animations & Glowing Effects */
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        .animate-shake {
+            animation: wrongShake 0.4s ease-in-out;
+        }
+
+        .correct-glow {
+            border-color: #16a34a !important;
+            background-color: rgba(34, 197, 94, 0.25) !important;
+            box-shadow: 0 0 22px rgba(34, 197, 94, 0.8), inset 0 0 10px rgba(34, 197, 94, 0.3) !important;
+            color: #052e16 !important;
+        }
+
+        .wrong-glow {
+            border-color: #dc2626 !important;
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
+            color: #450a0a !important;
+        }
+
         /* Spooky Pulsing Button */
         .spooky-btn {
             background: linear-gradient(135deg, #d97706 0%, #7c2d12 100%);
@@ -240,27 +265,49 @@
                 </p>
             </div>
 
+            <!-- Quiz Options Section -->
+            <div class="my-5 bg-amber-900/10 p-4 rounded-xl border border-amber-900/30">
+                <p class="text-xs uppercase tracking-widest font-bold text-amber-950 mb-3 text-center sm:text-left">
+                    🧠 Who is this pioneer? Choose the answer:
+                </p>
+                <div id="quiz-options" class="flex flex-col gap-2.5">
+                    <button data-correct="true" class="quiz-opt w-full text-left px-4 py-3 rounded-xl border-2 border-amber-900/40 bg-amber-900/10 hover:bg-amber-900/25 text-amber-950 font-bold text-sm sm:text-base transition-all flex items-center justify-between group cursor-pointer">
+                        <span>A) Ada Lovelace</span>
+                        <span class="opt-icon opacity-0 text-xl font-black transition-opacity">✓</span>
+                    </button>
+                    <button data-correct="false" class="quiz-opt w-full text-left px-4 py-3 rounded-xl border-2 border-amber-900/40 bg-amber-900/10 hover:bg-amber-900/25 text-amber-950 font-bold text-sm sm:text-base transition-all flex items-center justify-between group cursor-pointer">
+                        <span>B) Marie Curie</span>
+                        <span class="opt-icon opacity-0 text-xl font-black transition-opacity">✗</span>
+                    </button>
+                    <button data-correct="false" class="quiz-opt w-full text-left px-4 py-3 rounded-xl border-2 border-amber-900/40 bg-amber-900/10 hover:bg-amber-900/25 text-amber-950 font-bold text-sm sm:text-base transition-all flex items-center justify-between group cursor-pointer">
+                        <span>C) Hedy Lamarr</span>
+                        <span class="opt-icon opacity-0 text-xl font-black transition-opacity">✗</span>
+                    </button>
+                </div>
+
+                <!-- Quiz Feedback Banner -->
+                <div id="quiz-result" class="hidden mt-3 p-3 rounded-xl border text-center text-xs sm:text-sm font-bold transition-all"></div>
+            </div>
+
             <!-- Divider Line -->
-            <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-amber-900/40 to-transparent my-6"></div>
+            <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-amber-900/40 to-transparent my-4"></div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
+                <button id="hint-btn" class="px-4 py-2.5 rounded-xl border border-amber-900/40 bg-amber-900/10 hover:bg-amber-900/25 text-amber-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    💡 Need a Hint?
+                </button>
                 <button id="restart-btn" class="spooky-btn text-amber-100 font-bold px-6 py-3 rounded-xl w-full sm:w-auto text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-lg">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
                     Play Again
                 </button>
-
-                <!-- Optional Hint Toggle Button -->
-                <button id="hint-btn" class="text-xs font-semibold text-amber-900/70 hover:text-amber-950 underline transition-colors py-2">
-                    💡 Who could this pioneer be?
-                </button>
             </div>
 
-            <!-- Hidden Hint Reveal -->
-            <div id="hint-text" class="hidden mt-4 p-3 bg-amber-900/10 rounded-lg border border-amber-900/20 text-xs font-serif text-amber-900 text-center">
-                <strong>Historical Hint:</strong> Think of Ada Lovelace — the visionary who wrote the first algorithm long before electronic computers!
+            <!-- Hint Text Display -->
+            <div id="hint-text" class="hidden mt-3 p-3 rounded-xl bg-amber-900/15 border border-amber-900/30 text-xs text-amber-950 text-center italic">
+                🕵️ <strong>Clue:</strong> She was the daughter of Lord Byron and wrote the first algorithm for Babbage's Analytical Engine in 1843!
             </div>
         </div>
     </div>
@@ -369,6 +416,93 @@
                 console.error('Audio error:', e);
             }
         }
+
+        // Play Correct Answer Chime Sound
+        function playCorrectSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            try {
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 - E5 - G5 - C6
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = freq;
+                    const startTime = audioCtx.currentTime + (i * 0.08);
+                    gain.gain.setValueAtTime(0, startTime);
+                    gain.gain.linearRampToValueAtTime(0.2, startTime + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.35);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        // Play Wrong Answer Buzz Sound
+        function playWrongSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(90, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.26);
+            } catch (e) { console.error(e); }
+        }
+
+        // Quiz Interactive Option Handling
+        const quizOptionBtns = document.querySelectorAll('.quiz-opt');
+        const quizResult = document.getElementById('quiz-result');
+
+        quizOptionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isCorrect = btn.getAttribute('data-correct') === 'true';
+                const icon = btn.querySelector('.opt-icon');
+
+                if (isCorrect) {
+                    playCorrectSound();
+                    btn.classList.add('correct-glow');
+                    btn.classList.remove('wrong-glow', 'animate-shake');
+                    if (icon) icon.classList.remove('opacity-0');
+
+                    // Disable all option buttons
+                    quizOptionBtns.forEach(b => b.classList.add('pointer-events-none'));
+
+                    // Reveal success banner
+                    quizResult.classList.remove('hidden', 'bg-red-950/20', 'border-red-800', 'text-red-900');
+                    quizResult.classList.add('bg-emerald-900/20', 'border-emerald-700', 'text-emerald-950');
+                    quizResult.innerHTML = '✨ <strong>Correct!</strong> Ada Lovelace wrote the world’s first computer algorithm in 1843!';
+
+                    // Particle Burst on Correct Selection
+                    const rect = btn.getBoundingClientRect();
+                    const containerRect = gameContainer.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2 - containerRect.left;
+                    const centerY = rect.top + rect.height / 2 - containerRect.top;
+                    createPopParticles(centerX, centerY);
+                } else {
+                    playWrongSound();
+                    btn.classList.add('wrong-glow', 'animate-shake');
+                    if (icon) icon.classList.remove('opacity-0');
+
+                    setTimeout(() => {
+                        btn.classList.remove('animate-shake');
+                    }, 400);
+
+                    quizResult.classList.remove('hidden', 'bg-emerald-900/20', 'border-emerald-700', 'text-emerald-950');
+                    quizResult.classList.add('bg-red-950/20', 'border-red-800', 'text-red-900');
+                    quizResult.innerHTML = '❌ <strong>Incorrect!</strong> Try another answer.';
+                }
+            });
+        });
 
         // SVG Bat Graphic Template Generator
         function createBatElement() {
@@ -618,7 +752,22 @@
             isGameActive = true;
             scoreText.innerText = `0 / ${TOTAL_BATS_TO_WIN}`;
             progressBar.style.width = '0%';
-            hintText.classList.add('hidden');
+            
+            // Reset Quiz State
+            if (quizResult) {
+                quizResult.classList.add('hidden');
+                quizResult.innerHTML = '';
+            }
+            quizOptionBtns.forEach(btn => {
+                btn.classList.remove('correct-glow', 'wrong-glow', 'animate-shake', 'pointer-events-none');
+                const icon = btn.querySelector('.opt-icon');
+                if (icon) icon.classList.add('opacity-0');
+            });
+
+            // Reset Hint Display
+            if (hintText) {
+                hintText.classList.add('hidden');
+            }
 
             // Hide Modal
             riddleModal.classList.add('pointer-events-none', 'opacity-0');
@@ -656,9 +805,11 @@
         restartBtn.addEventListener('click', resetGame);
 
         // Hint Toggle
-        hintBtn.addEventListener('click', () => {
-            hintText.classList.toggle('hidden');
-        });
+        if (hintBtn && hintText) {
+            hintBtn.addEventListener('click', () => {
+                hintText.classList.toggle('hidden');
+            });
+        }
 
         // Initialize Game on Load
         window.onload = function() {
